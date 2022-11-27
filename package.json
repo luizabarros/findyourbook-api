@@ -1,0 +1,16 @@
+{
+  "name": "findyourbook-api",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "dev": "nodemon src/app.js"
+  },
+  "dependencies": {
+    "express": "4.18.2"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.20",
+    "sucrase": "^3.29.0"
+  }
+}
