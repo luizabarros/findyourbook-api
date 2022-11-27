@@ -34,6 +34,8 @@ const getRecentPostsService = () => {
     })
 
     recentPosts.splice(0, 1, filteredRecentPosts)
+
+    return [200, ...recentPosts]
 }
 
 // Controllers
