@@ -1,6 +1,5 @@
 import express from "express"
 import { allPosts } from "./database"
-import { recentPosts } from "./database"
 
 const app = express()
 app.use(express.json())
@@ -25,6 +24,8 @@ const createPostService = (params) => {
 }
 
 const getRecentPostsService = () => {
+    console.log(allPosts)
+
     const filteredRecentPosts = allPosts.filter(posts => {
         const createdDay = posts.createdOn.getDate()
         const currentDay = new Date().getDay()
@@ -33,9 +34,14 @@ const getRecentPostsService = () => {
         return availableSince < 7
     })
 
-    recentPosts.splice(0, 1, filteredRecentPosts)
+    allPosts.splice(0, 1, ...filteredRecentPosts)
 
-    return [200, ...recentPosts]
+    return [200, allPosts]
+}
+
+const getFilteredPostsService = (subway, name) => {
+    const filteredPosts = allPosts.filter(post => post.subway === subway && post.name === name)
+    return [200, filteredPosts]
 }
 
 // Controllers
@@ -49,9 +55,18 @@ const getRecentPostsController = (request, response) => {
     return response.status(statusCode).json(recentPosts)
 }
 
+const getFilteredPostsController = (request, response) => {
+    const subway = request.query.subway
+    const name = request.query.name
+
+    const [statusCode, filteredPosts] = getFilteredPostsService(subway, name)
+    return response.status(statusCode).json(filteredPosts)
+}
+
 // Routes
 
 app.post("/posts", createPostController)
 app.get("/posts", getRecentPostsController)
+app.get("/post", getFilteredPostsController)
 
 app.listen(port, () => console.log(`App is running on localhost:${3000}`))
